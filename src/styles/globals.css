@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: Inter;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+input {
+  height: 36px;
+  border: 1px solid #c1c1c1;
+  border-radius: 4px;
+  padding-left: 12px;
+}
+
+.user-info {
+  position: sticky;
+  /* width: 224px; */
+  height: 36px;
+  gap: 20px;
+  opacity: 0px;
+  font-size: 14px;
+  margin-left: auto;
+}
+
+.product-section {
+  gap: 20px;
+}
+
+.offers-section {
+  background-color: #f4f4f4;
+  gap: 20px;
+}
+
+.form-container {
+  border: 1px solid #c1c1c1;
+  border-radius: 4px;
+  max-width: 476px;
+}
+
+.submit-button {
+  background-color: #000000;
+  color: #ffffff;
+  border-radius: 4px;
+  font-size: large;
+}
+
+.login-password {
+  /* height: 36px; */
+  border: 1px solid #c1c1c1;
+  border-radius: 4px;
+}
+
+.login-password-input {
+  width: 90% !important;
+}
