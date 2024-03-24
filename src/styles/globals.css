@@ -21,7 +21,7 @@ input {
   /* width: 224px; */
   height: 36px;
   gap: 20px;
-  opacity: 0px;
+  /* opacity: 0px; */
   font-size: 14px;
   margin-left: auto;
 }
