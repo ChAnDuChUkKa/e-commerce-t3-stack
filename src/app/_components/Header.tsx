@@ -11,9 +11,9 @@ const Header = () => {
     <>
       <div className="w-100 h-100 flex flex-col bg-white">
         <div className="w-50 user-info flex flex-row items-center justify-end px-16 text-slate-700">
-          <p className="cursor-pointer">Help</p>
-          <p className="cursor-pointer">Orders & Returns</p>
-          <p className="cursor-pointer">Hi, Jhon</p>
+          <p className="cursor-pointer text-[#333333] font-400 text-[12px]">Help</p>
+          <p className="cursor-pointer text-[#333333] font-400 text-[12px]">Orders & Returns</p>
+          <p className="cursor-pointer text-[#333333] font-400 text-[12px]">Hi, Jhon</p>
         </div>
         <div className="flex flex-row items-center justify-between px-16 py-3">
           <div>
