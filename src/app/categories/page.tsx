@@ -4,21 +4,21 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
-type Product= {
+type Product = {
   id: number;
   name: string;
   isInterested: boolean;
-}
+};
 
 const Categories = () => {
   const router = useRouter();
   const [num, setNum] = useState(0);
   const userId = Cookies.get("userId");
-  useEffect(()=>{
+  useEffect(() => {
     if (!userId) {
       router.push("/login");
     }
-  },[router, userId])
+  }, [router, userId]);
   const { data, refetch } = api.category.getAll.useQuery({
     num: num,
     userId: userId ? parseInt(userId) : -1,
@@ -28,7 +28,7 @@ const Categories = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const refetchData = async () => {
     await refetch();
-  }
+  };
 
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
@@ -70,9 +70,16 @@ const Categories = () => {
                       isInterested: e.target.checked,
                     });
                   }}
+                  className="h-[24px] w-[24px] text-[#000000] accent-black rounded border-0"
                   checked={eachProduct.isInterested}
+                  disabled={upodateCategory.isPending}
                 />
-                <label htmlFor={eachProduct.id.toString()}>{eachProduct.name}</label>
+                <label
+                  htmlFor={eachProduct.id.toString()}
+                  className="font-400 text-[16px] leading-3 text-[#000000]"
+                >
+                  {eachProduct.name}
+                </label>
               </div>
             );
           })}
@@ -80,7 +87,7 @@ const Categories = () => {
         <div className="flex flex-row justify-between">
           {num > 0 && (
             <button type="button" onClick={() => setNum((num) => num - 1)}>
-              previous page
+              Previous Page
             </button>
           )}
           {num < 14 && (
@@ -89,23 +96,22 @@ const Categories = () => {
               onClick={() => setNum((num) => num + 1)}
               className="align-items-end flex justify-end"
             >
-              next page
+              Next Page
             </button>
           )}
         </div>
       </form>
       <div className="flex flex-row">
-
-      <button
-        type="button"
-        onClick={() => {
-          Cookies.remove("userId");
-          router.push("/login")
-        }}
-        className="mx-auto h-[36px] bg-slate-900 text-[#FFFFFF] w-100 submit-button px-20 text-center"
-      >
-        Logout
-      </button>
+        <button
+          type="button"
+          onClick={() => {
+            Cookies.remove("userId");
+            router.push("/login");
+          }}
+          className="w-100 submit-button mx-auto h-[36px] bg-slate-900 px-20 text-center text-[#FFFFFF]"
+        >
+          Logout
+        </button>
       </div>
     </>
   );
