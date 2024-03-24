@@ -21,19 +21,19 @@ const SignUp = () => {
 
   const userId = Cookies.get("userId");
 
-  useEffect(()=>{
+  useEffect(() => {
     if (userId) {
       router.push("/categories");
     }
-  },[router, userId])
-  
+  }, [router, userId]);
 
   const [formState, setFormState] = useState<number>(1);
-  
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [otp, setOTP] = useState<string>('');
 
-  const handleOTPChange = (value:string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [otp, setOTP] = useState<string[]>(new Array(8).fill(""));
+  const [showOtpError, setShowOtpError] = useState<boolean>(false);
+
+  const handleOTPChange = (value: string[]) => {
     setOTP(value);
   };
   // let formState=1
@@ -58,25 +58,57 @@ const SignUp = () => {
     resolver: yupResolver(signupFormSchema),
   });
 
-  const submitForm = () => {
-    setFormState((formState) => formState + 1);
-  };
-
+  const validateEmail = api.user.validateEmail.useMutation();
   const createUser = api.user.createUser.useMutation();
 
+  const validateOtp = () => {
+    const isOtpFilled = otp.every((otpInput) => otpInput !== "");
+    if (isOtpFilled) {
+      setShowOtpError(false);
+      createUser.mutate({
+        name: watch("name"),
+        email: watch("emailId"),
+        password: watch("password"),
+      });
+    } else {
+      setShowOtpError(true);
+    }
+  };
+
+  const submitForm = () => {
+     validateEmail.mutate({
+      email: watch("emailId"),
+    });
+
+// if(data == undefined) {
+//   setFormState((formState) => formState + 1);
+// }
+    // if (data?.status!=="error") {
+    //   setFormState((formState) => formState + 1);
+    // }
+  };
+
+
   useEffect(() => {
-    if (createUser.data){ Cookies.set("userId", createUser.data.id.toString());
-    console.log({router});
-    router.push("/categories");}
+    console.log({data: validateEmail.data})
+    if(validateEmail.isSuccess && validateEmail.data == null && formState==1) {
+      setFormState(formState+1);
+    }
+  }, [validateEmail, formState])
+
+
+
+  useEffect(() => {
+    if (createUser.data) {
+      Cookies.set("userId", createUser.data.id.toString());
+      console.log({ router });
+      router.push("/categories");
+    }
   }, [createUser, router]);
 
   const handleCreateUser = async (e: FormEvent<HTMLElement>) => {
     e.preventDefault();
-    createUser.mutate({
-      name: watch("name"),
-      email: watch("emailId"),
-      password: watch("password"),
-    });
+    validateOtp();
   };
 
   return (
@@ -90,17 +122,26 @@ const SignUp = () => {
           <div className="flex flex-col gap-2">
             <label htmlFor="name">Name</label>
             <input type="text" {...register("name")} />
-            {errors.name && <p>{errors.name.message}</p>}
+            {errors.name && (
+              <p className="text-red-400">{errors.name.message}</p>
+            )}
           </div>
           <div className="flex flex-col">
             <label htmlFor="email">Email</label>
             <input type="email" {...register("emailId")} />
-            {errors.emailId && <p>{errors.emailId.message}</p>}
+            {errors.emailId && (
+              <p className="text-red-400">{errors.emailId.message}</p>
+            )}
           </div>
+          {validateEmail.error && (
+            <p className="text-red-400">{validateEmail.error.message}</p>
+          )}
           <div className="flex flex-col">
             <label htmlFor="password">Password</label>
             <input type="password" {...register("password")} />
-            {errors.password && <p>{errors.password.message}</p>}
+            {errors.password && (
+              <p className="text-red-400">{errors.password.message}</p>
+            )}
           </div>
           <button type="submit" className="submit-button px-auto py-4">
             Create Account
@@ -127,6 +168,10 @@ const SignUp = () => {
             {watch("emailId")}
           </div>
           <OTPInput onChange={handleOTPChange} />
+          {showOtpError && <p className="text-red-400">*Required</p>}
+          {createUser.error && (
+            <p className="text-red-400">{createUser.error.message}</p>
+          )}
           <button type="submit" className="submit-button px-auto py-4">
             VERIFY
           </button>

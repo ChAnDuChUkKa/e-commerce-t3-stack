@@ -7,7 +7,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import type { ObjectSchema } from "yup";
 import { api } from "@/trpc/react";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 export type Login = {
   email: string;
@@ -48,20 +48,20 @@ const Login = () => {
   const loginUser = api.user.loginUser.useMutation();
 
   useEffect(() => {
-    if(loginUser.isSuccess) {
-      Cookies.set("userId",loginUser.data.id.toString())
+    if (loginUser.isSuccess) {
+      Cookies.set("userId", loginUser.data.id.toString());
       router.push("/categories");
     }
-  }, [loginUser, router])
-  
-  const submitLoginForm = async() => {
+  }, [loginUser, router]);
+
+  const submitLoginForm = async () => {
     loginUser.mutate({
       email: getValues("email"),
       password: getValues("password"),
     });
 
     // if (loginUser.isSuccess && loginUser.data) {
-      
+
     // }
   };
 
@@ -81,7 +81,7 @@ const Login = () => {
       <div className="flex flex-col">
         <label htmlFor="email">Email</label>
         <input type="email" {...register("email")} />
-        {errors.email && <p>{errors.email.message}</p>}
+        {errors.email && <p className="text-red-400">{errors.email.message}</p>}
       </div>
       <div className="flex flex-col">
         <label htmlFor="password">Password</label>
@@ -95,8 +95,11 @@ const Login = () => {
             {showPassword ? "Close" : "Show"}
           </button>
         </div>
-        {errors.password && <p>{errors.password.message}</p>}
+        {errors.password && <p className="text-red-400">{errors.password.message}</p>}
       </div>
+      {loginUser.error && (
+        <p className="text-red-400">{loginUser.error.message}</p>
+      )}
       <button type="submit" className="submit-button px-auto py-4">
         LOGIN
       </button>

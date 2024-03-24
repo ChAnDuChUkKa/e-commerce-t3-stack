@@ -20,6 +20,27 @@ export const userRouter = createTRPCRouter({
       });
     }),
 
+    validateEmail: publicProcedure
+    .input(z.object({ email:z.string()}))
+    .mutation(async ({ ctx, input }) => {
+      // simulate a slow db call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      const data=await ctx.db.user.findUnique({
+        where: {
+          email: input.email,
+        },
+      });
+      
+      if(data!==null){
+        throw new TRPCError({
+          code:'BAD_REQUEST',
+          message:"Account already exists with given Email Id."
+        })
+      }
+      return data
+    }),
+
     loginUser: publicProcedure
     .input(z.object({ email:z.string(),password:z.string() }))
     .mutation(async ({ ctx, input }) => {

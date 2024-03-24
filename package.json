@@ -10,7 +10,8 @@
     "dev": "next dev",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "npm run db:push && npx prisma db seed && next build"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

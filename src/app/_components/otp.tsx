@@ -1,8 +1,8 @@
-import React, { useState, useRef, ChangeEvent, KeyboardEvent } from 'react';
+import React, { useState, useRef, type KeyboardEvent } from 'react';
 
 interface OTPInputProps {
   length?: number;
-  onChange?: (otp: string) => void;
+  onChange?: (otp: string[]) => void;
 }
 
 const OTPInput: React.FC<OTPInputProps> = ({ length = 8, onChange }) => {
@@ -14,7 +14,7 @@ const OTPInput: React.FC<OTPInputProps> = ({ length = 8, onChange }) => {
     newOTP[index] = value;
     setOTP(newOTP);
     if (onChange) {
-      onChange(newOTP.join(''));
+      onChange(newOTP);
     }
     // Move to the next input field if not empty
     if (value && otpInputs.current[index + 1]) {

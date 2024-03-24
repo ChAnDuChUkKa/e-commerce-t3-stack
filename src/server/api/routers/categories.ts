@@ -31,7 +31,7 @@ export const categories = createTRPCRouter({
   .input(z.object({categoryId: z.number() ,userId : z.number(),isInterested:z.boolean()}))
   .mutation(async ({ ctx, input }) => {
     // simulate a slow db call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    // await new Promise((resolve) => setTimeout(resolve, 1000));
 if (input.isInterested) {
 return  ctx.db.userCategories.create({
     data:{
